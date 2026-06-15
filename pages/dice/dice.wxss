@@ -1,5 +1,5 @@
 /* pages/dice/dice.wxss */
-/* 微信小程序《摇五个骰子》- 核心视觉皮肤文件 (Aesthetic Dark Felt Theme) */
+/* 微信小程序《摇五个骰子》- 核心视觉皮肤文件 (Luxury Cyber Dark Theme) */
 
 /* 1. 深度沉浸暗黑游戏底板 */
 .container {
@@ -7,11 +7,14 @@
   flex-direction: column;
   justify-content: space-between;
   min-height: 100vh;
-  background-color: #0F172A; /* 极客暗黑蓝灰底色 */
+  background-color: #070708; /* Luxury coal */
+  background-image: 
+    radial-gradient(circle at 50% 30%, #1a1cf216 0%, transparent 60%),
+    radial-gradient(circle at 50% 80%, #000000 0%, #070708 100%);
   box-sizing: border-box;
   padding: 40rpx 30rpx 60rpx 30rpx;
-  color: #F8FAFC;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: #ECEFF1;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 /* 2. 顶部微小的设置开关面板 */
@@ -29,8 +32,8 @@
   justify-content: center;
   padding: 10rpx 24rpx;
   border-radius: 30rpx;
-  background: rgba(30, 41, 59, 0.7);
-  border: 1rpx solid rgba(255, 255, 255, 0.08);
+  background: rgba(30, 41, 59, 0.4);
+  border: 1rpx solid rgba(255, 255, 255, 0.05);
   font-size: 26rpx;
   color: #94A3B8;
   transition: all 0.2s ease;
@@ -46,30 +49,23 @@
   opacity: 0.7;
 }
 
-/* 3. 豪华色盘/色盅展示舞台 */
+/* 3. 豪华透明色盘舞台 (模拟无托盘设计) */
 .game-stage {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 600rpx;
-  margin: 30rpx 0;
+  height: 640rpx;
+  margin: 20rpx 0;
 }
 
-/* 精美圆形金色镶边深绿毛毡骰盘 */
 .dice-board {
   position: relative;
   width: 520rpx;
   height: 520rpx;
   border-radius: 50%;
-  background: radial-gradient(circle, #0F5E3B 50%, #064E2E 90%); /* 深绿呢绒桌面 */
-  box-shadow: 
-    inset 0 10rpx 30rpx rgba(0, 0, 0, 0.6), 
-    0 12rpx 35rpx rgba(0, 0, 0, 0.5),
-    0 0 0 16rpx #1E293B, /* 深灰色木套圈 */
-    0 0 0 20rpx #CA8A04, /* 耀眼金丝环面 */
-    0 4rpx 10rpx 22rpx rgba(0, 0, 0, 0.35);
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -79,43 +75,32 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 460rpx;
+  height: 460rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.015);
+  border: 2rpx dashed rgba(255, 255, 255, 0.05);
+}
+
+/* 4. 骰子绝对重叠与拟真质感 */
+.dices-container {
+  position: relative;
   width: 440rpx;
   height: 440rpx;
-  border-radius: 50%;
-  border: 2rpx dashed rgba(202, 138, 4, 0.15); /* 考究缝线 */
-}
-
-/* 4. 骰子定位与细腻圆角斑点立体造型 */
-.dices-container {
-  display: grid;
-  grid-template-columns: repeat(3, 120rpx);
-  grid-gap: 24rpx;
-  justify-content: center;
-  align-content: center;
-  width: 420rpx;
-  height: 420rpx;
   box-sizing: border-box;
-  padding: 20rpx;
-}
-
-/* 将第五个骰子居中或偏向布局 */
-.dices-container :nth-child(4) {
-  grid-column-start: 1;
-}
-.dices-container :nth-child(5) {
-  grid-column-start: 3;
 }
 
 .dice {
-  position: relative;
+  position: absolute;
   width: 104rpx;
   height: 104rpx;
-  background-color: #FFFFFF;
+  background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
   border-radius: 20rpx;
   box-shadow: 
-    0 6rpx 0 #E2E8F0, 
-    0 10rpx 16rpx rgba(0, 0, 0, 0.4),
-    inset 0 -4rpx 6rpx rgba(148, 163, 184, 0.2);
+    0 8rpx 0 #cbd5e1, 
+    0 18rpx 28rpx rgba(0, 0, 0, 0.65),
+    inset 0 2rpx 4rpx rgba(255, 255, 255, 0.8),
+    inset 0 -4rpx 6rpx rgba(148, 163, 184, 0.25);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -134,12 +119,12 @@
   width: 16rpx;
   height: 16rpx;
   border-radius: 50%;
-  background-color: #1E293B; /* 经典深蓝色墨色斑点 */
+  background-color: #1E293B;
 }
 
 /* 骰子1、4点的中式红色红点特色 */
 .red-dot {
-  background-color: #E11D48 !important; /* 抢眼朱砂红 */
+  background-color: #E11D48 !important;
 }
 
 /* 1点超大大红点 */
@@ -180,73 +165,128 @@
 
 /* 骰子滚动中的过渡样式（缩放和自旋） */
 .dice-rolling {
-  transform: scale(0.9) rotate(360deg);
-  opacity: 0.85;
+  animation: diceRollAnim 0.15s infinite linear;
 }
 
-/* 5. 绝对覆盖的高拟真高质感皮革骰盅 (Dice Cup Mask) */
+@keyframes diceRollAnim {
+  0% { transform: translate(-50%, -50%) scale(0.9) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) scale(0.9) rotate(360deg); }
+}
+
+/* 5. 绝对覆盖的极奢黑金及银环极简 3D 骰盅 (Dice Cup Mask) */
 .dice-cup-mask {
   position: absolute;
-  width: 430rpx;
-  height: 430rpx;
-  border-radius: 50%;
-  pointer-events: auto; /* 允许触摸拖动事件触发 */
+  width: 320rpx;
+  height: 500rpx;
+  pointer-events: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   transition: all 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  z-index: 10;
+  z-index: 20;
 }
 
-/* 杯身 */
+/* 杯体外部：富光泽黑硅/黑瓷圆柱 */
 .cup-body {
   position: relative;
-  width: 320rpx;
-  height: 340rpx;
-  background: linear-gradient(135deg, #475569 0%, #1E293B 40%, #0F172A 100%);
-  border-radius: 40rpx 40rpx 10rpx 10rpx;
+  width: 300rpx;
+  height: 440rpx;
+  background: linear-gradient(to right, #0a0b0d 0%, #16181b 20%, #2d3139 50%, #16181b 80%, #0a0b0d 100%);
+  border-radius: 40rpx 40rpx 36rpx 36rpx;
   box-shadow: 
-    0 16rpx 36rpx rgba(0, 0, 0, 0.8),
-    inset 0 4rpx 12rpx rgba(255, 255, 255, 0.15),
-    inset 0 -10rpx 20rpx rgba(0, 0, 0, 0.6);
-  border: 4rpx solid #334155;
+    0 40rpx 80rpx rgba(0, 0, 0, 0.95),
+    inset 0 6rpx 16rpx rgba(255, 255, 255, 0.15);
+  border: 2rpx solid rgba(0, 0, 0, 0.85);
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* 烫金复古云龙/波纹杯身花纹 */
-.cup-pattern-gold {
+/* 顶部与底部银色镀铬环饰 */
+.silver-band {
   position: absolute;
-  width: 240rpx;
-  height: 120rpx;
-  border-top: 4rpx double rgba(234, 179, 8, 0.45);
-  border-bottom: 4rpx double rgba(234, 179, 8, 0.45);
-  opacity: 0.85;
+  left: 0;
+  right: 0;
+  height: 32rpx;
+  background: linear-gradient(to right, #595b5e 0%, #cbd0d3 25%, #ffffff 50%, #a2a6aa 75%, #595b5e 100%);
+  border-top: 2rpx solid rgba(255, 255, 255, 0.4);
+  border-bottom: 2rpx solid rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.45);
+  z-index: 10;
 }
 
-.cup-pattern-gold::after {
-  content: 'DICE CUP';
-  display: block;
-  font-family: monospace;
-  font-size: 18rpx;
-  color: rgba(234, 179, 8, 0.7);
-  letter-spacing: 12rpx;
-  text-align: center;
-  margin-top: 40rpx;
-  font-weight: bold;
+.silver-band-top {
+  top: 64rpx;
 }
 
-/* 改良杯把手物理感 */
-.cup-handle {
+.silver-band-bottom {
+  bottom: 64rpx;
+}
+
+/* 科技感微点纹理 */
+.tech-pattern {
   position: absolute;
-  top: -12rpx;
-  width: 50rpx;
-  height: 16rpx;
-  background-color: #E2E8F0;
-  border-radius: 10rpx;
-  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.4);
+  top: 96rpx;
+  bottom: 96rpx;
+  left: 0;
+  right: 0;
+  opacity: 0.18;
+  background-image: radial-gradient(circle, #ffffff 2rpx, transparent 2rpx);
+  background-size: 18rpx 18rpx;
+  background-position: center;
+  mix-blend-mode: overlay;
+}
+
+/* 科学导轨细线装饰 */
+.circuit-track-1 {
+  position: absolute;
+  top: 130rpx;
+  bottom: 130rpx;
+  left: 26rpx;
+  right: 26rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.05);
+  border-radius: 16rpx;
+  pointer-events: none;
+}
+
+.circuit-track-2 {
+  position: absolute;
+  top: 180rpx;
+  bottom: 180rpx;
+  left: 54rpx;
+  right: 54rpx;
+  border-left: 2rpx solid rgba(255, 255, 255, 0.06);
+  border-right: 2rpx solid rgba(255, 255, 255, 0.06);
+  pointer-events: none;
+}
+
+/* 高光反光带 */
+.sheen {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.18) 50%, rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+}
+
+.sheen-1 {
+  left: 40rpx;
+  width: 36rpx;
+  filter: blur(2rpx);
+}
+
+.sheen-2 {
+  left: 80rpx;
+  width: 10rpx;
+  filter: blur(1rpx);
+}
+
+.sheen-3 {
+  right: 60rpx;
+  width: 44rpx;
+  filter: blur(3rpx);
 }
 
 /* 骰盅内部绝对文字标签(状态表现) */
@@ -254,7 +294,7 @@
   font-size: 24rpx;
   font-weight: 500;
   color: #94A3B8;
-  margin-top: 24rpx;
+  margin-top: 36rpx;
   letter-spacing: 4rpx;
   text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.8);
 }
@@ -263,29 +303,23 @@
   color: #38BDF8;
 }
 
-/* 三态过渡样式：
-   1. covered: 初始盖上点数一无所知 */
+/* 三态过渡样式 */
 .dice-cup-mask.covered {
   opacity: 1;
-  transform: translateY(0rpx) scale(1);
 }
 
-/* 2. peeking: “偷看”只亮出一线天缝隙，稍微浮夸抬起，呈现半透感 */
 .dice-cup-mask.peeking {
-  opacity: 0.12;
-  transform: translateY(-50rpx) scale(1.05);
+  opacity: 0.22;
 }
 
-/* 3. revealed: “大开神盅”，盖板彻底往后翻滚飞散，退去一侧 */
 .dice-cup-mask.revealed {
   opacity: 0;
-  transform: translateY(-280rpx) rotate(15deg) scale(0.6);
   visibility: hidden;
 }
 
-/* 物理震颤摇晃动画：
-   - 摇动时候，色盅疯狂振幅晃动
-   - 摇动时候，色盘也微震 */
+/* ==========================================================================
+   6. 物理震颤摇晃动画与辅助指示器
+   ========================================================================== */
 @keyframes cupShake {
   0% { transform: translate(0, 0) rotate(0deg); }
   10% { transform: translate(-10rpx, 8rpx) rotate(-8deg); }

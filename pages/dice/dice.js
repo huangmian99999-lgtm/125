@@ -76,7 +76,10 @@ Page({
       vibrateEnabled: storedVibrate !== false
     });
 
-    // 2. 初始化音频实例
+    // 2. 使用自然错落排布初始化骰子
+    this.rebuildDices(this.data.diceCount);
+
+    // 3. 初始化音频实例
     this.initAudio();
   },
 
@@ -171,12 +174,62 @@ Page({
   },
 
   /**
-   * 动态重构骰子数目数组
+   * 计算最优雅、逼真的自然错落散布坐标 (百分比坐标, z轴倾斜)
+   */
+  getDiceLayoutPos: function (count, index) {
+    const layouts = {
+      1: [
+        { left: '50%', top: '50%', rot: 12 }
+      ],
+      2: [
+        { left: '33%', top: '50%', rot: -15 },
+        { left: '67%', top: '50%', rot: 25 }
+      ],
+      3: [
+        { left: '50%', top: '34%', rot: 5 },
+        { left: '32%', top: '66%', rot: -30 },
+        { left: '68%', top: '66%', rot: 42 }
+      ],
+      4: [
+        { left: '32%', top: '32%', rot: -20 },
+        { left: '68%', top: '32%', rot: 15 },
+        { left: '32%', top: '68%', rot: 45 },
+        { left: '68%', top: '68%', rot: -10 }
+      ],
+      5: [
+        { left: '33%', top: '28%', rot: -16 },
+        { left: '64%', top: '26%', rot: 22 },
+        { left: '42%', top: '51%', rot: -12 },
+        { left: '71%', top: '46%', rot: 34 },
+        { left: '55%', top: '69%', rot: -18 }
+      ],
+      6: [
+        { left: '30%', top: '25%', rot: -18 },
+        { left: '52%', top: '25%', rot: 10 },
+        { left: '72%', top: '27%', rot: 25 },
+        { left: '28%', top: '65%', rot: 35 },
+        { left: '50%', top: '68%', rot: -15 },
+        { left: '72%', top: '65%', rot: -5 }
+      ]
+    };
+
+    const list = layouts[count] || layouts[1];
+    return list[index] || { left: '50%', top: '50%', rot: 0 };
+  },
+
+  /**
+   * 动态重构骰子数目数组，并赋予定位坐标样式
    */
   rebuildDices: function (count) {
     const arr = [];
-    for (let i = 1; i <= count; i++) {
-      arr.push({ id: i, value: 1, isRolling: false });
+    for (let i = 0; i < count; i++) {
+      const pos = this.getDiceLayoutPos(count, i);
+      arr.push({ 
+        id: i + 1, 
+        value: 1, 
+        isRolling: false,
+        style: `position: absolute; left: ${pos.left}; top: ${pos.top}; transform: translate(-50%, -50%) rotate(${pos.rot}deg);`
+      });
     }
     this.setData({ dices: arr });
   },
@@ -231,11 +284,11 @@ Page({
     let diffY = clientY - this.startY;
     let newOffsetY = this.startOffsetY + diffY;
 
-    // 限制拖动范围在 -150 到 0 像素之间 (向上限位)
+    // 限制拖动范围在 -180 到 0 像素之间 (向上限位)
     if (newOffsetY > 0) newOffsetY = 0;
-    if (newOffsetY < -150) newOffsetY = -150;
+    if (newOffsetY < -180) newOffsetY = -180;
 
-    let ratio = Math.abs(newOffsetY) / 150;
+    let ratio = Math.abs(newOffsetY) / 180;
     let rotateX = ratio * 85; // 3D掀盖旋转角度
     let rotate = ratio * 8;   // Z轴微偏，增加手持触控真实感
 
@@ -374,8 +427,8 @@ Page({
     
     this.setData({
       gameState: 'peeking',
-      cupOffsetY: -40,
-      cupRotateX: 30,
+      cupOffsetY: -60,
+      cupRotateX: 34,
       cupRotate: 2,
       cupTransition: 'transform 0.25s cubic-bezier(0.1, 0.8, 0.25, 1), opacity 0.25s ease'
     });
@@ -395,7 +448,7 @@ Page({
         cupOffsetY: 0,
         cupRotateX: 0,
         cupRotate: 0,
-        cupTransition: 'transform 0.25s cubic-bezier(0.1, 0.8, 0.25, 1)'
+        cupTransition: 'transform 0.2s cubic-bezier(0.1, 0.8, 0.25, 1)'
       });
     }
   },
@@ -410,7 +463,7 @@ Page({
         cupOffsetY: 0,
         cupRotateX: 0,
         cupRotate: 0,
-        cupTransition: 'transform 0.25s cubic-bezier(0.1, 0.8, 0.25, 1)'
+        cupTransition: 'transform 0.2s cubic-bezier(0.1, 0.8, 0.25, 1)'
       });
     }
   },
@@ -426,7 +479,7 @@ Page({
     }
 
     const nextState = this.data.gameState === 'revealed' ? 'covered' : 'revealed';
-    const nextOffsetY = nextState === 'revealed' ? -140 : 0;
+    const nextOffsetY = nextState === 'revealed' ? -180 : 0;
     const nextRotateX = nextState === 'revealed' ? 90 : 0;
     const nextRotate = nextState === 'revealed' ? 5 : 0;
     

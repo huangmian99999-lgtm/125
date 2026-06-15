@@ -19,17 +19,17 @@
     <button class="counter-btn" bindtap="onAddDice" disabled="{{isRolling}}" id="btn_add_dice">+</button>
   </view>
 
-  <!-- 2. 色盅核心展示区 (包含色盘及 3D/旋转 的5个骰子) -->
+  <!-- 2. 色盅核心展示区 (包含色盘以及绝对散布的立体骰子) -->
   <view class="game-stage" id="game_stage_stage">
     
-    <!-- 骰子呈放的精美深绿毛毡色盘 (Dice Board) -->
+    <!-- 模拟无托盘的晶莹透明色盘区 (Dice Board) -->
     <view class="dice-board" id="game_dice_board_element">
       <view class="board-inner">
         
-        <!-- 5 个骰子的环形/错落网格布局 -->
+        <!-- 骰子的自然散布布局 -->
         <view class="dices-container {{isRolling ? 'is-shaking' : ''}}" id="dices_grid_holder">
           <block wx:for="{{dices}}" wx:key="id">
-            <view class="dice dice-face-{{item.value}} {{item.isRolling ? 'dice-rolling' : ''}}" id="dice_element_{{item.id}}">
+            <view class="dice dice-face-{{item.value}} {{item.isRolling ? 'dice-rolling' : ''}}" style="{{item.style}}" id="dice_element_{{item.id}}">
               <!-- 根据骰子值，循环绘制对应的斑点点数 -->
               <!-- 骰子 1 点: 正中一红色打点 -->
               <view wx:if="{{item.value === 1}}" class="dot-layout face-1">
@@ -96,8 +96,23 @@
       id="dice_cup_mask"
     >
       <view class="cup-body">
-        <view class="cup-pattern-gold"></view>
-        <view class="cup-handle"></view>
+        <!-- 顶部银环 -->
+        <view class="silver-band silver-band-top"></view>
+        
+        <!-- 底部银环 -->
+        <view class="silver-band silver-band-bottom"></view>
+        
+        <!-- 科技微点矩阵纹理 -->
+        <view class="tech-pattern"></view>
+        
+        <!-- 科技导轨细线装饰 -->
+        <view class="circuit-track-1"></view>
+        <view class="circuit-track-2"></view>
+        
+        <!-- 金属反光拉丝高光 -->
+        <view class="sheen sheen-1"></view>
+        <view class="sheen sheen-2"></view>
+        <view class="sheen sheen-3"></view>
       </view>
       <text class="cup-status-text" wx:if="{{gameState === 'covered'}}">👇 拖动骰盅/长按偷看</text>
       <text class="cup-status-text alert-text" wx:elif="{{gameState === 'peeking'}}">👁️ 偷看中 (松克复原)</text>

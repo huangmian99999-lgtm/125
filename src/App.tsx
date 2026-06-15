@@ -353,15 +353,18 @@ Page({
     </view>
   </view>
 
-  <!-- 色盅核心展示区 -->
-  <view class="game-stage">
-    <!-- 骰子呈放的精美深绿毛毡色盘 -->
-    <view class="dice-board">
+  <!-- 色盅核心展示区 (包含色盘以及绝对散布的立体骰子) -->
+  <view class="game-stage" id="game_stage_stage">
+    
+    <!-- 模拟无托盘的晶莹透明色盘区 (Dice Board) -->
+    <view class="dice-board" id="game_dice_board_element">
       <view class="board-inner">
-        <view class="dices-container {{isRolling ? 'is-shaking' : ''}}">
+        
+        <!-- 骰子的自然散布布局 -->
+        <view class="dices-container {{isRolling ? 'is-shaking' : ''}}" id="dices_grid_holder">
           <block wx:for="{{dices}}" wx:key="id">
-            <view class="dice dice-face-{{item.value}} {{item.isRolling ? 'dice-rolling' : ''}}">
-              <!-- 各种点数的斑点分布布局 -->
+            <view class="dice dice-face-{{item.value}} {{item.isRolling ? 'dice-rolling' : ''}}" style="{{item.style}}" id="dice_element_{{item.id}}">
+              <!-- 根据骰子值，循环绘制对应的斑点点数 -->
               <view wx:if="{{item.value === 1}}" class="dot-layout face-1">
                 <view class="dot dot-center red-dot"></view>
               </view>
@@ -369,7 +372,32 @@ Page({
                 <view class="dot dot-top-left"></view>
                 <view class="dot dot-bottom-right"></view>
               </view>
-              ...
+              <view wx:elif="{{item.value === 3}}" class="dot-layout face-3">
+                <view class="dot dot-top-left"></view>
+                <view class="dot dot-center"></view>
+                <view class="dot dot-bottom-right"></view>
+              </view>
+              <view wx:elif="{{item.value === 4}}" class="dot-layout face-4">
+                <view class="dot dot-top-left red-dot"></view>
+                <view class="dot dot-top-right red-dot"></view>
+                <view class="dot dot-bottom-left red-dot"></view>
+                <view class="dot dot-bottom-right red-dot"></view>
+              </view>
+              <view wx:elif="{{item.value === 5}}" class="dot-layout face-5">
+                <view class="dot dot-top-left"></view>
+                <view class="dot dot-top-right"></view>
+                <view class="dot dot-center"></view>
+                <view class="dot dot-bottom-left"></view>
+                <view class="dot dot-bottom-right"></view>
+              </view>
+              <view wx:elif="{{item.value === 6}}" class="dot-layout face-6">
+                <view class="dot dot-top-left"></view>
+                <view class="dot dot-top-right"></view>
+                <view class="dot dot-middle-left"></view>
+                <view class="dot dot-middle-right"></view>
+                <view class="dot dot-bottom-left"></view>
+                <view class="dot dot-bottom-right"></view>
+              </view>
             </view>
           </block>
         </view>
@@ -377,11 +405,32 @@ Page({
     </view>
 
     <!-- 盖在色盘之上的骰盅 -->
-    <view class="dice-cup-mask {{gameState}} {{isRolling ? 'cup-shaking' : ''}}">
+    <view 
+      class="dice-cup-mask {{gameState}} {{isRolling ? 'cup-shaking' : ''}}" 
+      style="transform: perspective(600rpx) rotateX({{cupRotateX}}deg) translateY({{cupOffsetY}}px) rotate({{cupRotate}}deg); transform-origin: top center; transition: {{cupTransition}}; opacity: {{(gameState === 'revealed' ? 0 : (gameState === 'peeking' ? 0.22 : 1))}};"
+      bindtouchstart="onTouchCupStart"
+      bindtouchmove="onTouchCupMove"
+      bindtouchend="onTouchCupEnd"
+      id="dice_cup_mask"
+    >
       <view class="cup-body">
-        <view class="cup-pattern-gold"></view>
-        <view class="cup-handle"></view>
+        <!-- 顶部银环 -->
+        <view class="silver-band silver-band-top"></view>
+        <!-- 底部银环 -->
+        <view class="silver-band silver-band-bottom"></view>
+        <!-- 科技微点矩阵纹理 -->
+        <view class="tech-pattern"></view>
+        <!-- 科技导轨细线装饰 -->
+        <view class="circuit-track-1"></view>
+        <view class="circuit-track-2"></view>
+        <!-- 金属反光拉丝高光 -->
+        <view class="sheen sheen-1"></view>
+        <view class="sheen sheen-2"></view>
+        <view class="sheen sheen-3"></view>
       </view>
+      <text class="cup-status-text" wx:if="{{gameState === 'covered'}}">👇 拖动骰盅/长按偷看</text>
+      <text class="cup-status-text alert-text" wx:elif="{{gameState === 'peeking'}}">👁️ 偷看中 (松手盖回)</text>
+      <text class="cup-status-text" wx:else>💥 已亮底板 (再次合上)</text>
     </view>
   </view>
 
@@ -403,29 +452,116 @@ Page({
   flex-direction: column;
   justify-content: space-between;
   min-height: 100vh;
-  background-color: #0F172A;
+  background-color: #070708;
+  background-image: radial-gradient(circle at 50% 30%, #1a1cf216 0%, transparent 60%), radial-gradient(circle at 50% 80%, #000000 0%, #070708 100%);
   padding: 40rpx 30rpx 60rpx 30rpx;
+  color: #ECEFF1;
 }
-
-/* 金丝环绕，呢绒质感 */
+.game-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 640rpx;
+}
 .dice-board {
   position: relative;
   width: 520rpx;
   height: 520rpx;
   border-radius: 50%;
-  background: radial-gradient(circle, #0F5E3B 50%, #064E2E 90%);
-  border: 16rpx solid #1E293B;
-  box-shadow: inset 0 10rpx 30rpx rgba(0, 0, 0, 0.6);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
-/* 骰盅三态动画过渡 */
+.board-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 460rpx;
+  height: 460rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.015);
+  border: 2rpx dashed rgba(255, 255, 255, 0.05);
+}
+.dices-container {
+  position: relative;
+  width: 440rpx;
+  height: 440rpx;
+}
+.dice {
+  position: absolute;
+  width: 104rpx;
+  height: 104rpx;
+  background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+  border-radius: 20rpx;
+  box-shadow: 0 8rpx 0 #cbd5e1, 0 18rpx 28rpx rgba(0, 0, 0, 0.65), inset 0 2rpx 4rpx rgba(255, 255, 255, 0.8), inset 0 -4rpx 6rpx rgba(148, 163, 184, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dice-rolling {
+  animation: diceRollAnim 0.15s infinite linear;
+}
+@keyframes diceRollAnim {
+  0% { transform: translate(-50%, -50%) scale(0.9) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) scale(0.9) rotate(360deg); }
+}
 .dice-cup-mask {
   position: absolute;
+  width: 320rpx;
+  height: 500rpx;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   transition: all 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 20;
 }
-.dice-cup-mask.covered { opacity: 1; transform: translateY(0); }
-.dice-cup-mask.peeking { opacity: 0.12; transform: translateY(-50rpx); }
-.dice-cup-mask.revealed { opacity: 0; transform: translateY(-280rpx) rotate(15deg); }`
+.cup-body {
+  position: relative;
+  width: 300rpx;
+  height: 440rpx;
+  background: linear-gradient(to right, #0a0b0d 0%, #16181b 20%, #2d3139 50%, #16181b 80%, #0a0b0d 100%);
+  border-radius: 40rpx 40rpx 36rpx 36rpx;
+  box-shadow: 0 40rpx 80rpx rgba(0, 0, 0, 0.95), inset 0 6rpx 16rpx rgba(255, 255, 255, 0.15);
+  border: 2rpx solid rgba(0, 0, 0, 0.85);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.silver-band {
+  position: absolute;
+  left: 0; right: 0; height: 32rpx;
+  background: linear-gradient(to right, #595b5e 0%, #cbd0d3 25%, #ffffff 50%, #a2a6aa 75%, #595b5e 100%);
+  border-top: 2rpx solid rgba(255, 255, 255, 0.4);
+  border-bottom: 2rpx solid rgba(0, 0, 0, 0.4);
+  z-index: 10;
+}
+.silver-band-top { top: 64rpx; }
+.silver-band-bottom { bottom: 64rpx; }
+.tech-pattern {
+  position: absolute; top: 96rpx; bottom: 96rpx; left: 0; right: 0; opacity: 0.18;
+  background-image: radial-gradient(circle, #ffffff 2rpx, transparent 2rpx);
+  background-size: 18rpx 18rpx;
+}
+.sheen {
+  position: absolute; top: 0; bottom: 0;
+  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.18) 50%, rgba(255, 255, 255, 0) 100%);
+}
+.sheen-1 { left: 40rpx; width: 36rpx; filter: blur(2rpx); }
+.sheen-2 { left: 80rpx; width: 10rpx; filter: blur(1rpx); }
+.sheen-3 { right: 60rpx; width: 44rpx; filter: blur(3rpx); }
+.cup-status-text {
+  font-size: 24rpx; font-weight: 500; color: #94A3B8; margin-top: 36rpx; letter-spacing: 4rpx;
+}
+.cup-status-text.alert-text { color: #38BDF8; }
+.dice-cup-mask.covered { opacity: 1; }
+.dice-cup-mask.peeking { opacity: 0.22; }
+.dice-cup-mask.revealed { opacity: 0; visibility: hidden; }`
   }
 ];
 

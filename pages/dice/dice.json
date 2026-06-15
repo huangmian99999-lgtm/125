@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "摇五个骰子",
+  "navigationBarBackgroundColor": "#0F172A",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#0F172A",
+  "backgroundTextStyle": "dark",
+  "disableScroll": true
+}

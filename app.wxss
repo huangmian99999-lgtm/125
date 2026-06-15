@@ -1,0 +1,6 @@
+/* app.wxss */
+page {
+  background-color: #0F172A;
+  height: 100%;
+  box-sizing: border-box;
+}

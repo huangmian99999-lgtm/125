@@ -1,0 +1,162 @@
+<!-- pages/dice/dice.wxml -->
+<!-- WeChat Mini Program: 摇五个骰子主页面 -->
+
+<view class="container" id="main_game_container">
+  <!-- 1. 顶部控制栏: 音效与震动开关 -->
+  <view class="header-settings" id="game_header_settings_container">
+    <view class="setting-item {{soundEnabled ? 'active' : ''}}" bindtap="onToggleSound" id="setting_sound_toggle">
+      <text class="icon-text">{{soundEnabled ? '🔊' : '🔇'}} 音效</text>
+    </view>
+    <view class="setting-item {{vibrateEnabled ? 'active' : ''}}" bindtap="onToggleVibrate" id="setting_vibrate_toggle">
+      <text class="icon-text">{{vibrateEnabled ? '📳' : '📴'}} 震动</text>
+    </view>
+  </view>
+
+  <!-- 1.5 新增：骰子数量 +/- 控制面板 -->
+  <view class="dice-counter" id="dice_counter_stepper">
+    <button class="counter-btn" bindtap="onSubDice" disabled="{{isRolling}}" id="btn_sub_dice">-</button>
+    <text class="counter-val">{{diceCount}} 个骰子</text>
+    <button class="counter-btn" bindtap="onAddDice" disabled="{{isRolling}}" id="btn_add_dice">+</button>
+  </view>
+
+  <!-- 2. 色盅核心展示区 (包含色盘及 3D/旋转 的5个骰子) -->
+  <view class="game-stage" id="game_stage_stage">
+    
+    <!-- 骰子呈放的精美深绿毛毡色盘 (Dice Board) -->
+    <view class="dice-board" id="game_dice_board_element">
+      <view class="board-inner">
+        
+        <!-- 5 个骰子的环形/错落网格布局 -->
+        <view class="dices-container {{isRolling ? 'is-shaking' : ''}}" id="dices_grid_holder">
+          <block wx:for="{{dices}}" wx:key="id">
+            <view class="dice dice-face-{{item.value}} {{item.isRolling ? 'dice-rolling' : ''}}" id="dice_element_{{item.id}}">
+              <!-- 根据骰子值，循环绘制对应的斑点点数 -->
+              <!-- 骰子 1 点: 正中一红色打点 -->
+              <view wx:if="{{item.value === 1}}" class="dot-layout face-1">
+                <view class="dot dot-center red-dot"></view>
+              </view>
+              
+              <!-- 骰子 2 点: 对角两点 -->
+              <view wx:elif="{{item.value === 2}}" class="dot-layout face-2">
+                <view class="dot dot-top-left"></view>
+                <view class="dot dot-bottom-right"></view>
+              </view>
+              
+              <!-- 骰子 3 点: 斜对角三点 -->
+              <view wx:elif="{{item.value === 3}}" class="dot-layout face-3">
+                <view class="dot dot-top-left"></view>
+                <view class="dot dot-center"></view>
+                <view class="dot dot-bottom-right"></view>
+              </view>
+              
+              <!-- 骰子 4 点: 四角红色 -->
+              <view wx:elif="{{item.value === 4}}" class="dot-layout face-4">
+                <view class="dot dot-top-left red-dot"></view>
+                <view class="dot dot-top-right red-dot"></view>
+                <view class="dot dot-bottom-left red-dot"></view>
+                <view class="dot dot-bottom-right red-dot"></view>
+              </view>
+              
+              <!-- 骰子 5 点: 四角 + 中间一点 -->
+              <view wx:elif="{{item.value === 5}}" class="dot-layout face-5">
+                <view class="dot dot-top-left"></view>
+                <view class="dot dot-top-right"></view>
+                <view class="dot dot-center"></view>
+                <view class="dot dot-bottom-left"></view>
+                <view class="dot dot-bottom-right"></view>
+              </view>
+              
+              <!-- 骰子 6 点: 两列六点 -->
+              <view wx:elif="{{item.value === 6}}" class="dot-layout face-6">
+                <view class="dot dot-top-left"></view>
+                <view class="dot dot-top-right"></view>
+                <view class="dot dot-middle-left"></view>
+                <view class="dot dot-middle-right"></view>
+                <view class="dot dot-bottom-left"></view>
+                <view class="dot dot-bottom-right"></view>
+              </view>
+            </view>
+          </block>
+        </view>
+        
+      </view>
+    </view>
+
+    <!-- 盖在色盘之上的“高拟真金花皮革骰盅”(Dice Cup) -->
+    <!-- 依据 gameState 控制骰盅的遮罩渲染状态:
+         1. covered: 纯黑深褐色烫金骰盅完全盖住，不透明度百分百 
+         2. peeking: 骰盅半透明(opacity=0.15)且上移40px，露点偷看 
+         3. revealed: 骰盅完全旋转并移动走开(opacity=0, translate) -->
+    <view 
+      class="dice-cup-mask {{gameState}} {{isRolling ? 'cup-shaking' : ''}}" 
+      style="transform: perspective(600rpx) rotateX({{cupRotateX}}deg) translateY({{cupOffsetY}}px) rotate({{cupRotate}}deg); transform-origin: top center; transition: {{cupTransition}}; opacity: {{(gameState === 'revealed' ? 0 : (gameState === 'peeking' ? 0.22 : 1))}};"
+      bindtouchstart="onTouchCupStart"
+      bindtouchmove="onTouchCupMove"
+      bindtouchend="onTouchCupEnd"
+      id="dice_cup_mask"
+    >
+      <view class="cup-body">
+        <view class="cup-pattern-gold"></view>
+        <view class="cup-handle"></view>
+      </view>
+      <text class="cup-status-text" wx:if="{{gameState === 'covered'}}">👇 拖动骰盅/长按偷看</text>
+      <text class="cup-status-text alert-text" wx:elif="{{gameState === 'peeking'}}">👁️ 偷看中 (松克复原)</text>
+      <text class="cup-status-text" wx:else>已开启</text>
+    </view>
+
+  </view>
+
+  <!-- 3. 色盅状态提示板 -->
+  <view class="status-indicator" id="game_status_indicator">
+    <block wx:if="{{isRolling}}">
+      <text class="indicator-text animate-pulse">🎲 骰盅正疯狂摇晃中...</text>
+    </block>
+    <block wx:else>
+      <text class="indicator-text state-covered-text" wx:if="{{gameState === 'covered'}}">🔒 点数已遮盖，点击下方按键看点/开盅</text>
+      <text class="indicator-text state-peeking-text" wx:elif="{{gameState === 'peeking'}}">👁️ 独家偷看点数中，松开即恢复遮盖</text>
+      <text class="indicator-text state-revealed-text" wx:elif="{{gameState === 'revealed'}}">🔓 大开神盅！所有人皆可观赏！</text>
+    </block>
+  </view>
+
+  <!-- 4. 核心控制按键面板 Area -->
+  <view class="control-panel" id="game_click_control_panel">
+    
+    <!-- “偷看”按钮：长按不放则 peeking，抬手恢复 covered -->
+    <button 
+      class="btn-control btn-peek {{gameState === 'revealed' || isRolling ? 'btn-disabled' : ''}}" 
+      bindtouchstart="onPeekStart" 
+      bindtouchend="onPeekEnd" 
+      bindtouchcancel="onPeekCancel"
+      disabled="{{gameState === 'revealed' || isRolling}}"
+      id="btn_hold_for_peek"
+    >
+      👁️ 长按偷看点数
+    </button>
+    
+    <!-- “开盅”按钮：一次性点亮或全部盖住切换 -->
+    <button 
+      class="btn-control btn-reveal-toggle {{gameState === 'revealed' ? 'active-revealed' : ''}} {{isRolling ? 'btn-disabled' : ''}}" 
+      bindtap="onToggleReveal" 
+      disabled="{{isRolling}}"
+      id="btn_click_to_reveal"
+    >
+      {{gameState === 'revealed' ? '🔒 重新盖色盅' : '💥 大开色盅 (亮底)'}}
+    </button>
+
+    <!-- “摇骰子”按钮：震动兜底 -->
+    <button 
+      class="btn-control btn-roll {{isRolling ? 'active-rolling' : ''}}" 
+      bindtap="onTapRollBtn"
+      id="btn_click_to_roll"
+    >
+      🔴 猛烈摇数 (ROLL)
+    </button>
+
+  </view>
+
+  <!-- 5. 底部贴心温馨微交互向导说明 -->
+  <view class="instructions-footer" id="interactive_tips_footer">
+    <text class="footer-tip">💡 加速度检测就绪：用力摇晃手机即可出发物理摇数</text>
+    <text class="footer-sub-tip">玩家口头约定游戏规则（大话骰、对决）</text>
+  </view>
+</view>

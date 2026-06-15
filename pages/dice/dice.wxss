@@ -1,0 +1,488 @@
+/* pages/dice/dice.wxss */
+/* 微信小程序《摇五个骰子》- 核心视觉皮肤文件 (Aesthetic Dark Felt Theme) */
+
+/* 1. 深度沉浸暗黑游戏底板 */
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+  background-color: #0F172A; /* 极客暗黑蓝灰底色 */
+  box-sizing: border-box;
+  padding: 40rpx 30rpx 60rpx 30rpx;
+  color: #F8FAFC;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* 2. 顶部微小的设置开关面板 */
+.header-settings {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20rpx;
+  width: 100%;
+  height: 80rpx;
+}
+
+.setting-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10rpx 24rpx;
+  border-radius: 30rpx;
+  background: rgba(30, 41, 59, 0.7);
+  border: 1rpx solid rgba(255, 255, 255, 0.08);
+  font-size: 26rpx;
+  color: #94A3B8;
+  transition: all 0.2s ease;
+}
+
+.setting-item.active {
+  color: #38BDF8;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1rpx solid rgba(56, 189, 248, 0.25);
+}
+
+.setting-item:active {
+  opacity: 0.7;
+}
+
+/* 3. 豪华色盘/色盅展示舞台 */
+.game-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 600rpx;
+  margin: 30rpx 0;
+}
+
+/* 精美圆形金色镶边深绿毛毡骰盘 */
+.dice-board {
+  position: relative;
+  width: 520rpx;
+  height: 520rpx;
+  border-radius: 50%;
+  background: radial-gradient(circle, #0F5E3B 50%, #064E2E 90%); /* 深绿呢绒桌面 */
+  box-shadow: 
+    inset 0 10rpx 30rpx rgba(0, 0, 0, 0.6), 
+    0 12rpx 35rpx rgba(0, 0, 0, 0.5),
+    0 0 0 16rpx #1E293B, /* 深灰色木套圈 */
+    0 0 0 20rpx #CA8A04, /* 耀眼金丝环面 */
+    0 4rpx 10rpx 22rpx rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.board-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 440rpx;
+  height: 440rpx;
+  border-radius: 50%;
+  border: 2rpx dashed rgba(202, 138, 4, 0.15); /* 考究缝线 */
+}
+
+/* 4. 骰子定位与细腻圆角斑点立体造型 */
+.dices-container {
+  display: grid;
+  grid-template-columns: repeat(3, 120rpx);
+  grid-gap: 24rpx;
+  justify-content: center;
+  align-content: center;
+  width: 420rpx;
+  height: 420rpx;
+  box-sizing: border-box;
+  padding: 20rpx;
+}
+
+/* 将第五个骰子居中或偏向布局 */
+.dices-container :nth-child(4) {
+  grid-column-start: 1;
+}
+.dices-container :nth-child(5) {
+  grid-column-start: 3;
+}
+
+.dice {
+  position: relative;
+  width: 104rpx;
+  height: 104rpx;
+  background-color: #FFFFFF;
+  border-radius: 20rpx;
+  box-shadow: 
+    0 6rpx 0 #E2E8F0, 
+    0 10rpx 16rpx rgba(0, 0, 0, 0.4),
+    inset 0 -4rpx 6rpx rgba(148, 163, 184, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s linear;
+}
+
+/* 骰子斑点排布样式 */
+.dot-layout {
+  position: relative;
+  width: 80rpx;
+  height: 80rpx;
+}
+
+.dot {
+  position: absolute;
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background-color: #1E293B; /* 经典深蓝色墨色斑点 */
+}
+
+/* 骰子1、4点的中式红色红点特色 */
+.red-dot {
+  background-color: #E11D48 !important; /* 抢眼朱砂红 */
+}
+
+/* 1点超大大红点 */
+.face-1 .dot-center {
+  width: 32rpx;
+  height: 32rpx;
+  left: 24rpx;
+  top: 24rpx;
+}
+
+/* 2点：右上、左下 */
+.dot-top-left { left: 8rpx; top: 8rpx; }
+.dot-top-right { right: 8rpx; top: 8rpx; }
+.dot-bottom-left { left: 8rpx; bottom: 8rpx; }
+.dot-bottom-right { right: 8rpx; bottom: 8rpx; }
+
+/* 3点：右上、正中、左下 */
+.face-3 .dot-top-left { left: 8rpx; top: 8rpx; }
+.face-3 .dot-center { left: 32rpx; top: 32rpx; }
+.face-3 .dot-bottom-right { right: 8rpx; bottom: 8rpx; }
+
+/* 4点：四个角红点 */
+.face-4 .dot-top-left { left: 8rpx; top: 8rpx; }
+.face-4 .dot-top-right { right: 8rpx; top: 8rpx; }
+.face-4 .dot-bottom-left { left: 8rpx; bottom: 8rpx; }
+.face-4 .dot-bottom-right { right: 8rpx; bottom: 8rpx; }
+
+/* 5点：四角墨色 + 正中 */
+.face-5 .dot-top-left { left: 8rpx; top: 8rpx; }
+.face-5 .dot-top-right { right: 8rpx; top: 8rpx; }
+.face-5 .dot-center { left: 32rpx; top: 32rpx; }
+.face-5 .dot-bottom-left { left: 8rpx; bottom: 8rpx; }
+.face-5 .dot-bottom-right { right: 8rpx; bottom: 8rpx; }
+
+/* 6点：两侧排列 */
+.dot-middle-left { left: 8rpx; top: 32rpx; }
+.dot-middle-right { right: 8rpx; top: 32rpx; }
+
+/* 骰子滚动中的过渡样式（缩放和自旋） */
+.dice-rolling {
+  transform: scale(0.9) rotate(360deg);
+  opacity: 0.85;
+}
+
+/* 5. 绝对覆盖的高拟真高质感皮革骰盅 (Dice Cup Mask) */
+.dice-cup-mask {
+  position: absolute;
+  width: 430rpx;
+  height: 430rpx;
+  border-radius: 50%;
+  pointer-events: auto; /* 允许触摸拖动事件触发 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 10;
+}
+
+/* 杯身 */
+.cup-body {
+  position: relative;
+  width: 320rpx;
+  height: 340rpx;
+  background: linear-gradient(135deg, #475569 0%, #1E293B 40%, #0F172A 100%);
+  border-radius: 40rpx 40rpx 10rpx 10rpx;
+  box-shadow: 
+    0 16rpx 36rpx rgba(0, 0, 0, 0.8),
+    inset 0 4rpx 12rpx rgba(255, 255, 255, 0.15),
+    inset 0 -10rpx 20rpx rgba(0, 0, 0, 0.6);
+  border: 4rpx solid #334155;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 烫金复古云龙/波纹杯身花纹 */
+.cup-pattern-gold {
+  position: absolute;
+  width: 240rpx;
+  height: 120rpx;
+  border-top: 4rpx double rgba(234, 179, 8, 0.45);
+  border-bottom: 4rpx double rgba(234, 179, 8, 0.45);
+  opacity: 0.85;
+}
+
+.cup-pattern-gold::after {
+  content: 'DICE CUP';
+  display: block;
+  font-family: monospace;
+  font-size: 18rpx;
+  color: rgba(234, 179, 8, 0.7);
+  letter-spacing: 12rpx;
+  text-align: center;
+  margin-top: 40rpx;
+  font-weight: bold;
+}
+
+/* 改良杯把手物理感 */
+.cup-handle {
+  position: absolute;
+  top: -12rpx;
+  width: 50rpx;
+  height: 16rpx;
+  background-color: #E2E8F0;
+  border-radius: 10rpx;
+  box-shadow: 0 4rpx 10rpx rgba(0, 0, 0, 0.4);
+}
+
+/* 骰盅内部绝对文字标签(状态表现) */
+.cup-status-text {
+  font-size: 24rpx;
+  font-weight: 500;
+  color: #94A3B8;
+  margin-top: 24rpx;
+  letter-spacing: 4rpx;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.8);
+}
+
+.cup-status-text.alert-text {
+  color: #38BDF8;
+}
+
+/* 三态过渡样式：
+   1. covered: 初始盖上点数一无所知 */
+.dice-cup-mask.covered {
+  opacity: 1;
+  transform: translateY(0rpx) scale(1);
+}
+
+/* 2. peeking: “偷看”只亮出一线天缝隙，稍微浮夸抬起，呈现半透感 */
+.dice-cup-mask.peeking {
+  opacity: 0.12;
+  transform: translateY(-50rpx) scale(1.05);
+}
+
+/* 3. revealed: “大开神盅”，盖板彻底往后翻滚飞散，退去一侧 */
+.dice-cup-mask.revealed {
+  opacity: 0;
+  transform: translateY(-280rpx) rotate(15deg) scale(0.6);
+  visibility: hidden;
+}
+
+/* 物理震颤摇晃动画：
+   - 摇动时候，色盅疯狂振幅晃动
+   - 摇动时候，色盘也微震 */
+@keyframes cupShake {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  10% { transform: translate(-10rpx, 8rpx) rotate(-8deg); }
+  20% { transform: translate(12rpx, -12rpx) rotate(10deg); }
+  30% { transform: translate(-14rpx, -4rpx) rotate(-12deg); }
+  40% { transform: translate(10rpx, 14rpx) rotate(8deg); }
+  50% { transform: translate(-10rpx, -10rpx) rotate(-5deg); }
+  60% { transform: translate(12rpx, 10rpx) rotate(6deg); }
+  70% { transform: translate(-14rpx, 8rpx) rotate(-10deg); }
+  80% { transform: translate(8rpx, -14rpx) rotate(8deg); }
+  90% { transform: translate(-8rpx, -4rpx) rotate(-6deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+.cup-shaking {
+  animation: cupShake 0.6s infinite ease-in-out;
+}
+
+@keyframes boardShake {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-4rpx, 4rpx); }
+  50% { transform: translate(4rpx, -4rpx); }
+  75% { transform: translate(-2rpx, -2rpx); }
+  100% { transform: translate(0, 0); }
+}
+
+.is-shaking {
+  animation: boardShake 0.4s infinite linear;
+}
+
+/* 6. 中部文字操作提示框 */
+.status-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90rpx;
+  width: 100%;
+}
+
+.indicator-text {
+  font-size: 28rpx;
+  font-weight: 500;
+  letter-spacing: 1rpx;
+}
+
+.state-covered-text { color: #94A3B8; }
+.state-peeking-text { color: #38BDF8; font-weight: bold; }
+.state-revealed-text { color: #F59E0B; font-weight: bold; }
+
+.animate-pulse {
+  animation: textPulse 1s infinite alternate;
+}
+
+@keyframes textPulse {
+  0% { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+
+/* 7. 操作按键物理立体美学面板 */
+.control-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 26rpx;
+  width: 100%;
+}
+
+.btn-control {
+  width: 100% !important;
+  height: 106rpx;
+  border-radius: 53rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34rpx;
+  font-weight: bold;
+  border: none;
+  box-shadow: 0 8rpx 16rpx rgba(0, 0, 0, 0.35);
+  transition: all 0.15s ease-out;
+}
+
+/* 长按偷看：科技质感淡蓝 */
+.btn-peek {
+  background: linear-gradient(135deg, #0EA5E9 0%, #0284C7 100%);
+  color: #FFFFFF;
+  text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.15);
+}
+
+.btn-peek:active {
+  transform: translateY(4rpx);
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.2);
+  background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);
+}
+
+/* 大开神盅 / 盖盅 */
+.btn-reveal-toggle {
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+  color: #FFFFFF;
+}
+
+.btn-reveal-toggle.active-revealed {
+  background: linear-gradient(135deg, #475569 0%, #334155 100%);
+}
+
+.btn-reveal-toggle:active {
+  transform: translateY(4rpx);
+  box-shadow: 0 4rpx 8rpx rgba(0, 0, 0, 0.2);
+}
+
+/* 猛摇色盅 - 改为强对比的物理红按键 */
+.btn-roll {
+  background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+  color: #FFFFFF;
+  box-shadow: 0 8rpx 20rpx rgba(220, 38, 38, 0.4);
+}
+
+.btn-roll:active {
+  transform: translateY(4rpx);
+  box-shadow: 0 4rpx 10rpx rgba(220, 38, 38, 0.2);
+  background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%);
+}
+
+.active-rolling {
+  opacity: 0.6 !important;
+  background: #334155 !important;
+  box-shadow: none !important;
+}
+
+.btn-disabled {
+  opacity: 0.45 !important;
+  pointer-events: none;
+  background: #334155 !important;
+  color: #94A3B8 !important;
+  box-shadow: none !important;
+}
+
+/* 8. 底部温馨无扰辅助脚注说明 */
+.instructions-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10rpx;
+  width: 100%;
+}
+
+.footer-tip {
+  font-size: 24rpx;
+  color: #64748B;
+  text-align: center;
+}
+
+.footer-sub-tip {
+  font-size: 20rpx;
+  color: #475569;
+  letter-spacing: 1rpx;
+}
+
+/* 9. 新增：骰子个数调节器样式 */
+.dice-counter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30rpx;
+  background: rgba(30, 41, 59, 0.4);
+  padding: 12rpx 36rpx;
+  border-radius: 40rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.05);
+  margin-top: 10rpx;
+  margin-bottom: 10rpx;
+}
+
+.counter-btn {
+  width: 64rpx !important;
+  height: 64rpx !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #FFFFFF !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 36rpx !important;
+  font-weight: bold !important;
+  border: none !important;
+  padding: 0 !important;
+  min-height: auto !important;
+  line-height: 1 !important;
+}
+
+.counter-btn:active {
+  background: rgba(255, 255, 255, 0.2) !important;
+  transform: scale(0.95);
+}
+
+.counter-val {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #F8FAFC;
+  min-width: 130rpx;
+  text-align: center;
+  letter-spacing: 1rpx;
+}

@@ -1,0 +1,13 @@
+{
+  "pages": [
+    "pages/dice/dice"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#0F172A",
+    "navigationBarTitleText": "摇五个骰子",
+    "navigationBarTextStyle": "white",
+    "navigationStyle": "default"
+  },
+  "sitemapLocation": "sitemap.json"
+}

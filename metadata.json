@@ -1,0 +1,6 @@
+{
+  "name": "摇五个骰子",
+  "description": "微信小程序《摇五个骰子》电子色盅核心体验。支持真机摇一摇、震动反馈、高保真3D骰子摇骰、盖/看/开三态切换及声音仿真。提供完美的小程序源码预览与打包。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
